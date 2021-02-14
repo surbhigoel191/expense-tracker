@@ -135,7 +135,7 @@ body{
 }
 .currency{
     position: absolute;
-    right: 150px;
+    right: 20%;
     top: 5px;
     color: white;
     font-size: 18px;

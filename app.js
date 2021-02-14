@@ -531,7 +531,7 @@ let UIController = (() => {
             alert("Please enter value.");
         }else if(input.value <= 0){
             alert("Please enter a positive value.");
-        }else if(input.date === null){
+        }else if(input.date === ""){
             alert("Please enter a date.");
         }else if(input.expenseType === undefined){
             alert("Please choose an expense type.");

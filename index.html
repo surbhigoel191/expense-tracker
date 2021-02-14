@@ -20,7 +20,21 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" crossorigin="anonymous"></script>
-
+    <script type="text/javascript">
+        function fun(){
+            if(document.getElementById("right").classList.contains('black')){
+                document.getElementById("right").classList.remove('black');
+                document.getElementById("header").classList.remove('light');
+                document.getElementById("right").classList.add('white');
+                document.getElementById("header").classList.add('dark');
+            }else{
+                document.getElementById("right").classList.remove('white');
+                document.getElementById("header").classList.remove('dark');
+                document.getElementById("right").classList.add('black');
+                document.getElementById("header").classList.add('light');
+            }
+        }
+    </script>
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -28,7 +42,7 @@
 <div class="row">
     <div class="col-4 left-container">
         <div class="month-container">
-            <div class="header fs-white">Total</div>
+            <div class="header fs-white light">Total</div>
             <div id="current-month" class="sub-text fs-white"></div>
             <div class="budget-container p-2 mt-4">
                 <span id="month-budget" class="month-amount">₹ 0</span>
@@ -49,7 +63,7 @@
             <canvas id="expense-chart"></canvas>
         </div>
     </div>
-    <div class="col-8 right-container">
+    <div id="right" class="col-8 right-container black">
         <div class="currency dropdown open">
             <button class="btn dropdown-toggle"
                     type="button" id="dropdownMenu3" data-toggle="dropdown"
@@ -64,8 +78,10 @@
                 <a class="dropdown-item" id="pnd">United Kingdom Pound</a>
             </div>
         </div>
+        <button class="moon" onclick="fun()">
+            <img src="/Users/Surbhi/Desktop/expense-manager-master/moon-half-visible-face-on-light-and-half-on-darkness.svg" width="35" height="35"></button>
         <div class="calc-container">
-            <div class="header fs-dark-grey">Track Your Budget</div><br>
+            <div id="header" class="header fs-dark-grey">Track Your Budget</div><br>
             <div class="btn-toolbar">
             <div class="dropdown open">
                 <button class="btn btn-info dropdown-toggle"

@@ -229,7 +229,7 @@ let UIController = (() => {
                 description: document.querySelector(HTMLStrings.inExpenseDescription).value,
                 value: parseFloat(document.querySelector(HTMLStrings.inExpenseValue).value),
                 date: document.querySelector(HTMLStrings.inExpenseDate).value,
-                expenseType: this.expenseType ? this.expenseType : 'salary'
+                expenseType: this.expenseType
             }
         },
 
@@ -531,8 +531,10 @@ let UIController = (() => {
             alert("Please enter value.");
         }else if(input.value <= 0){
             alert("Please enter a positive value.");
-        }else if(input.date === ""){
+        }else if(input.date === null){
             alert("Please enter a date.");
+        }else if(input.expenseType === undefined){
+            alert("Please choose an expense type.");
         }else{
             console.log('Adding item');
             UIController.addListItem(input,curr_symbol);

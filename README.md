@@ -13,3 +13,4 @@ To run the project, go to https://surbhigoel191.github.io/expense-tracker/ or in
 3. Add one-time or recurring expenses/income.
 4. Visual representation via Pie charts.
 5. Light and dark theme options available.
+6. Supports all types of devices.

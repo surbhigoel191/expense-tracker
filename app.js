@@ -2,12 +2,25 @@ function myFunction(num){
     var ele = document.getElementById(num);
     ele.parentNode.removeChild(ele);
 }
-let prev_pie_type='total'
-let ExpenseController = (() => {
-    let total = 0, salary = 0, bonus = 0, allowance = 0, hack=0, cash=0, other_in=0,
+function fun(){
+    if(document.getElementById("right").classList.contains('black')){
+        document.getElementById("right").classList.remove('black');
+        document.getElementById("header").classList.remove('light');
+        document.getElementById("right").classList.add('white');
+        document.getElementById("header").classList.add('dark');
+    }else{
+        document.getElementById("right").classList.remove('white');
+        document.getElementById("header").classList.remove('dark');
+        document.getElementById("right").classList.add('black');
+        document.getElementById("header").classList.add('light');
+    }
+}
+let prev_pie_type='total';
+let no_of_mths=0;
+let total = 0, salary = 0, bonus = 0, allowance = 0, hack=0, cash=0, other_in=0,
     other_ex=0, food=0,transport=0,house=0,education=0,health=0,social=0;out=0,inn=0;
-
-    return {
+let ExpenseController = (() => {
+        return {
         inputEntry(userInput) {
             if (userInput['expenseType'] === 'salary') {
                 salary += userInput['value'];
@@ -125,7 +138,126 @@ let ExpenseController = (() => {
             return total;
         }
     }
+})();
+let ExpenseControllerMonthly = (() => {
+        return {
+        inputEntry(userInput) {
+            if (userInput['expenseType'] === 'salary') {
+                salary += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'bonus') {
+                bonus += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'allowance') {
+                allowance += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'hackathon wins') {
+                hack += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'cash inflow') {
+                cash += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'other inflow') {
+                other_in += no_of_mths*userInput['value'];
+                inn += no_of_mths*userInput['value'];
+                total += no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'food expenses') {
+                food += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'health expenses') {
+                health += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'transportation costs') {
+                transport += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'household expenses') {
+                house += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'education costs') {
+                education += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'social expenses') {
+                social += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+            if (userInput['expenseType'] === 'other outflow') {
+                other_ex += no_of_mths*userInput['value'];
+                out += no_of_mths*userInput['value'];
+                total -= no_of_mths*userInput['value'];
+            }
+        },
 
+        getOutData() {
+            return out;
+        },
+        getInData() {
+            return inn;
+        },
+        getSalaryData() {
+            return salary;
+        },
+        getBonusData() {
+            return bonus;
+        },
+        getHackData() {
+            return hack;
+        },
+        getAllowanceData() {
+            return allowance;
+        },
+        getCashData() {
+            return cash;
+        },
+        getOtherInData() {
+            return other_in;
+        },
+        getFoodData() {
+            return food;
+        },
+        getTransportData() {
+            return transport;
+        },
+        getEduData() {
+            return education;
+        },
+        getOtherOutData() {
+            return other_ex;
+        },
+        getHouseData() {
+            return house;
+        },
+        getSocialData() {
+            return social;
+        },
+        getHealthData() {
+            return health;
+        },
+        getTotalData() {
+            return total;
+        }
+    }
 })();
 
 let UIController = (() => {
@@ -145,6 +277,7 @@ let UIController = (() => {
         inExpenseValue: '.input-expense-value',
         inExpenseDate: '.input-expense-date',
         btnSubmitExpense: '.btn-submit-expense',
+        btnSubmitExpenseMonthly: '.btn-submit-expense-monthly',
         expenseList: '.expense-list',
         currentMonth: '#current-month',
         typeSalary: '#type-salary',
@@ -191,16 +324,27 @@ let UIController = (() => {
             document.querySelector(HTMLStrings.trackingText).textContent = "Tracking " + type;
         },
 
-        setPieType(type) {
+        setPieType(type,i) {
             console.log('here', type);
             this.pieType = type ? type : prev_pie_type;
-            if(this.pieType === 'in'){
-                UIController.displayChart_i(ExpenseController.getSalaryData(),ExpenseController.getBonusData(),ExpenseController.getAllowanceData(),ExpenseController.getHackData(),ExpenseController.getCashData(),ExpenseController.getOtherInData())
-            }else if(type === 'out'){
-                UIController.displayChart_o(ExpenseController.getFoodData(),ExpenseController.getHealthData(),ExpenseController.getTransportData(),ExpenseController.getHouseData(),ExpenseController.getEduData(),ExpenseController.getSocialData(),ExpenseController.getOtherOutData())
+            if(i==0){
+                if(this.pieType === 'in'){
+                    UIController.displayChart_i(ExpenseController.getSalaryData(),ExpenseController.getBonusData(),ExpenseController.getAllowanceData(),ExpenseController.getHackData(),ExpenseController.getCashData(),ExpenseController.getOtherInData())
+                }else if(type === 'out'){
+                    UIController.displayChart_o(ExpenseController.getFoodData(),ExpenseController.getHealthData(),ExpenseController.getTransportData(),ExpenseController.getHouseData(),ExpenseController.getEduData(),ExpenseController.getSocialData(),ExpenseController.getOtherOutData())
+                }else{
+                    UIController.displayChart_t(ExpenseController.getInData(),ExpenseController.getOutData())
+                }
             }else{
-                UIController.displayChart_t(ExpenseController.getInData(),ExpenseController.getOutData())
+                if(this.pieType === 'in'){
+                    UIController.displayChart_i(ExpenseControllerMonthly.getSalaryData(),ExpenseControllerMonthly.getBonusData(),ExpenseControllerMonthly.getAllowanceData(),ExpenseControllerMonthly.getHackData(),ExpenseControllerMonthly.getCashData(),ExpenseControllerMonthly.getOtherInData())
+                }else if(type === 'out'){
+                    UIController.displayChart_o(ExpenseControllerMonthly.getFoodData(),ExpenseControllerMonthly.getHealthData(),ExpenseControllerMonthly.getTransportData(),ExpenseControllerMonthly.getHouseData(),ExpenseControllerMonthly.getEduData(),ExpenseControllerMonthly.getSocialData(),ExpenseControllerMonthly.getOtherOutData())
+                }else{
+                    UIController.displayChart_t(ExpenseControllerMonthly.getInData(),ExpenseControllerMonthly.getOutData())
+                }
             }
+            
         },
 
         setCurrencyType(curr) {
@@ -244,6 +388,42 @@ let UIController = (() => {
             return {
                 pieType: prev_pie_type
             }
+        },
+
+        addListItemMonthly (inputObj, curr_symbol) {
+            let html='', element;let indx=1;
+            element = HTMLStrings.expenseList;
+            var i = parseInt(inputObj['date'].substring(5, 7))
+            no_of_mths = 12 - i + 1;
+            if(i/10 === 0){
+                if (inputObj['expenseType'] === 'salary' || inputObj['expenseType'] === 'bonus' || inputObj['expenseType'] === 'allowance' || inputObj['expenseType'] === 'hackathon wins' || inputObj['expenseType'] === 'cash inflow' || inputObj['expenseType'] === 'other inflow') {
+                    for(var x=i;x<=12;x++){
+                        html += '<div id="'+ indx +'" class="bottom-border"> <div class="row expense-row"><div class="col-2 expense-date fs-15">' + inputObj['date'].substring(0,5) + '0' + x + inputObj['date'].substring(7,10) + ' </div><div class="col-7 expense-text fs-15"> ' + inputObj['expenseType'] + ': ' + inputObj['description'] + ' </div><div class="col-2 expense-value expense-saving fs-15"> '+ curr_symbol + ' ' + this.numberFormat(inputObj['value']) + ' </div><div class="col-1" id="'+indx+'"><button style = "padding: 0rem 0rem" class = "btn bg-transparent" onclick="myFunction('+indx+')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button></div></div></div>'
+                    } 
+                } else {
+                    for(var x=i;x<=12;x++){
+                        html += '<div id="'+ indx +'" class="bottom-border"> <div class="row expense-row"><div class="col-2 expense-date fs-15">' + inputObj['date'].substring(0,5) + '0' + x + inputObj['date'].substring(7,10) + ' </div><div class="col-7 expense-text fs-15"> ' + inputObj['expenseType'] + ': ' + inputObj['description'] + ' </div><div class="col-2 expense-value expense-cost fs-15"> '+ curr_symbol + ' ' + this.numberFormat(inputObj['value']) + ' </div><div class="col-1" id="'+indx+'"><button style = "padding: 0rem 0rem" class = "btn bg-transparent" onclick="myFunction('+indx+')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button></div></div></div>'
+                    }
+                }  
+            }else{
+                if (inputObj['expenseType'] === 'salary' || inputObj['expenseType'] === 'bonus' || inputObj['expenseType'] === 'allowance' || inputObj['expenseType'] === 'hackathon wins' || inputObj['expenseType'] === 'cash inflow' || inputObj['expenseType'] === 'other inflow') {
+                    for(var x=i;x<=12;x++){
+                        html += '<div id="'+ indx +'" class="bottom-border"> <div class="row expense-row"><div class="col-2 expense-date fs-15">' + inputObj['date'].substring(0,5) + x + inputObj['date'].substring(7,10) + ' </div><div class="col-7 expense-text fs-15"> ' + inputObj['expenseType'] + ': ' + inputObj['description'] + ' </div><div class="col-2 expense-value expense-saving fs-15"> '+ curr_symbol + ' ' + this.numberFormat(inputObj['value']) + ' </div><div class="col-1" id="'+indx+'"><button style = "padding: 0rem 0rem" class = "btn bg-transparent" onclick="myFunction('+indx+')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button></div></div></div>'
+                    }
+                } else {
+                    for(var x=i;x<=12;x++){
+                        html += '<div id="'+ indx +'" class="bottom-border"> <div class="row expense-row"><div class="col-2 expense-date fs-15">' + inputObj['date'].substring(0,5) + x + inputObj['date'].substring(7,10) + ' </div><div class="col-7 expense-text fs-15"> ' + inputObj['expenseType'] + ': ' + inputObj['description'] + ' </div><div class="col-2 expense-value expense-cost fs-15"> '+ curr_symbol + ' ' + this.numberFormat(inputObj['value']) + ' </div><div class="col-1" id="'+indx+'"><button style = "padding: 0rem 0rem" class = "btn bg-transparent" onclick="myFunction('+indx+')"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button></div></div></div>'
+                    }
+                }
+            }
+            indx++;
+            // Adding the new element
+            document.querySelector(element).insertAdjacentHTML('beforeend', html);
+
+            // Clearing the input fields after adding element
+            document.querySelector(HTMLStrings.inExpenseValue).value = "";
+            document.querySelector(HTMLStrings.inExpenseDescription).value = "";
+            document.querySelector(HTMLStrings.inExpenseDate).value = "";
         },
 
         addListItem (inputObj, curr_symbol) {
@@ -373,7 +553,7 @@ let UIController = (() => {
     }
 })();
 
-((UIController, ExpenseController) => {
+((UIController, ExpenseController, ExpenseControllerMonthly) => {
 
     let HTMLStrings = UIController.getHTMLStrings();
     let setupEventListeners = () => {
@@ -408,6 +588,7 @@ let UIController = (() => {
             setCurrencyType('inr')
         });
         document.querySelector(HTMLStrings.btnSubmitExpense).addEventListener('click', addExpense);
+        document.querySelector(HTMLStrings.btnSubmitExpenseMonthly).addEventListener('click', addExpenseMonthly);
         document.querySelector(HTMLStrings.typeSalary).addEventListener('click', () => {
             var x = document.getElementsByClassName("dropdown-toggle");
             x[2].innerHTML = "Salary";
@@ -502,8 +683,8 @@ let UIController = (() => {
         UIController.setCurrencyType(type);
     }
 
-    let setPieType = (type) => {
-        UIController.setPieType(type);
+    let setPieType = (type,i) => {
+        UIController.setPieType(type,i);
     }
 
     let addExpense = () => {
@@ -540,7 +721,45 @@ let UIController = (() => {
             UIController.addListItem(input,curr_symbol);
             ExpenseController.inputEntry(input);
             UIController.updateOverallTotal(ExpenseController.getTotalData(), curr_symbol);
-            UIController.setPieType(pie.pieType);
+            UIController.setPieType(pie.pieType,0);
+        }
+    }
+
+    let addExpenseMonthly = () => {
+        let input = UIController.getUserExpenseInput();
+        let curr = UIController.getUserCurrencyInput();
+        let pie = UIController.getUserPieInput();
+        console.log(input);console.log(curr.currencyType);console.log(pie);
+        let curr_symbol;
+        if(curr.currencyType === 'inr'){
+            curr_symbol = '₹'
+        } else if(curr.currencyType === 'pnd'){
+            curr_symbol = '£'
+        } else if(curr.currencyType === 'euro'){
+            curr_symbol = '€'
+        } else if(curr.currencyType === 'usd'){
+            curr_symbol = '$'
+        } else if(curr.currencyType === 'yen'){
+            curr_symbol = '¥'
+        } else if(curr.currencyType === 'rbl') {
+            curr_symbol = '₽'
+        }
+        if(input.description === ""){
+            alert("Please enter description.");
+        }else if(isNaN(input.value)){
+            alert("Please enter value.");
+        }else if(input.value <= 0){
+            alert("Please enter a positive value.");
+        }else if(input.date === ""){
+            alert("Please enter a date.");
+        }else if(input.expenseType === undefined){
+            alert("Please choose an expense type.");
+        }else{
+            console.log('Adding items');
+            UIController.addListItemMonthly(input,curr_symbol);
+            ExpenseControllerMonthly.inputEntry(input);
+            UIController.updateOverallTotal(ExpenseControllerMonthly.getTotalData(), curr_symbol);
+            UIController.setPieType(pie.pieType,1);
         }
     }
 
@@ -552,4 +771,4 @@ let UIController = (() => {
 
     init();
 
-})(UIController, ExpenseController);
+})(UIController, ExpenseController, ExpenseControllerMonthly);

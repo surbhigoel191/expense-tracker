@@ -20,27 +20,11 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        function fun(){
-            if(document.getElementById("right").classList.contains('black')){
-                document.getElementById("right").classList.remove('black');
-                document.getElementById("header").classList.remove('light');
-                document.getElementById("right").classList.add('white');
-                document.getElementById("header").classList.add('dark');
-            }else{
-                document.getElementById("right").classList.remove('white');
-                document.getElementById("header").classList.remove('dark');
-                document.getElementById("right").classList.add('black');
-                document.getElementById("header").classList.add('light');
-            }
-        }
-    </script>
 </head>
 <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
 <div class="row">
     <div class="col-4 left-container">
+    <div class="sticky">
         <div class="month-container">
             <div class="header fs-white">Total</div>
             <div id="current-month" class="sub-text fs-white"></div>
@@ -63,6 +47,7 @@
             <canvas id="expense-chart"></canvas>
         </div>
     </div>
+    </div>
     <div id="right" class="col-8 right-container black">
         <div class="currency dropdown open">
             <button class="btn dropdown-toggle"
@@ -81,7 +66,7 @@
         <button class="moon" onclick="fun()">
             <img src="moon-half-visible-face-on-light-and-half-on-darkness.svg" width="35" height="35"></button>
         <div class="calc-container">
-            <div id="header" class="header light fs-dark-grey">Track Your Budget</div><br>
+            <div id="header" class="light header fs-dark-grey">Track Your Budget</div><br>
             <div class="btn-toolbar">
             <div class="dropdown open">
                 <button class="btn btn-info dropdown-toggle"
@@ -128,9 +113,10 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Date</label>
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
                     <input class="form-control input-expense-date" type="date" value="" id="example-date-input"></div>
-                    <div class="col-sm-2"><input type="button" class="btn btn-success btn-submit-expense" type="submit" value="Done!"></div>
+                    <div class="col-sm-2"><input type="button" class="btn btn-success btn-submit-expense" type="submit" value="Add once"></div>
+                    <div class="col-sm-2"><input type="button" class="btn btn-success btn-submit-expense-monthly" type="submit" value="Add monthly"></div>
                 </div>
             </div></div></form>
             <div class="expense-list mt-4"></div>
